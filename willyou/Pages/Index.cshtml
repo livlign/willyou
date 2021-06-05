@@ -1,0 +1,43 @@
+﻿@page
+@model willyou.Pages.IndexModel
+@{
+    Layout = null;
+}
+
+<link href="~/resources/willyou.css" rel="stylesheet" />
+<script src="~/resources/willyou.js"></script>
+<script src="~/resources/vara.min.js"></script>
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Will you...</title>
+</head>
+<body>
+    <div id="menu" class="menu">
+        <div class="menuContainer" id="menu-container">
+            <input type="text" id="txtMain" style="margin-right: 15px;" value="Will you marry me?" />
+            <button id="btnPlay">Play</button>
+            <br>
+            Moving button
+            <br>
+            <input type="radio" id="rdo-left" name="movingButton" value="left">
+            <label for="left">Left</label><br>
+            <input type="radio" id="rdo-right" name="movingButton" value="right" checked>
+            <label for="right">Right</label><br>
+        </div>
+        <span id="toggle" class="toggle" onclick="toggleMenu()">>>></span>
+    </div>
+    <div id="content" class="content">
+        <div class="middle">
+            <div id="vara-container" class="vara-container"></div>
+        </div>
+        <div class="bottom">
+            <div class="buttonContainer" id=button-container>
+                <button class="btn btn-static" id="btn-left">Yes</button>
+                <button class="btn" id="btn-right">No</button>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
