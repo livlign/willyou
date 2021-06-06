@@ -13,6 +13,7 @@ svg{
 .menu{
     background-color: transparent;
 	transition: all .5s ease-in-out;
+	-webkit-transition: all .5s ease-in-out;
 }
 
 .menuContainer{
@@ -55,9 +56,7 @@ svg{
 
 .bottom{
 	flex-grow: 1;
-	display: flex;
-	align-items: flex-start;
-	flex-direction: column;
+	width: 100%;
 }
 
 .vara-container{
@@ -66,12 +65,16 @@ svg{
 
 .buttonContainer{
 	width: 100%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
 }
 
 .btn{
+	position: absolute;
 	min-width: 5em;
 	min-height: 2em;
-	border-radius: 5px;
+	border-radius: 8px;
 	border: 2px double white;
 	font-size: 30px;
 	background-color: transparent;
@@ -81,11 +84,11 @@ svg{
 }
 
 .btn-static:hover{
-	background-color: #ffdcf8;
-	transition: all 1s ease-in-out;
 	cursor: pointer;
-	color: rgb(88, 88, 88);
-	border-color: black;
+	color: #ffff70;
+	border-color: #ffff70;
+	border-radius: 20px;
+	transition: all .2s ease-in-out;
 }
 
 @keyframes blink {
@@ -94,7 +97,34 @@ svg{
 	}
   }
 
-@keyframes mymove {
+
+  .btn-static span[class^='ion'] {
+	position: relative;
+  }
+  .btn-static:before {
+	content: '';
+	background-color: #fff;
+	border-radius: 20px;
+	display: block;
+	position: absolute;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	-webkit-transform: scale(0.001, 0.001);
+			transform: scale(0.001, 0.001);
+  }
+.btn-static:focus {
+	outline: 0;
+  }
+.btn-static:focus:before {
+	-webkit-animation: Click_Effect 0.8s ease-out;
+			animation: Click_Effect 0.8s ease-out;
+  }
+
+
+/* animation effects */
+  @keyframes Move_Effect {
 	0% {opacity: 0%;}
 	10%{opacity: 10%;}
 	20%{opacity: 20%;}
@@ -106,4 +136,51 @@ svg{
 	80%{opacity: 80%;}
 	90%{opacity: 90%;};
 	100% {opacity: 100%;}
+  }
+  @-webkit-keyframes Move_Effect {
+	0% {opacity: 0%;}
+	10%{opacity: 10%;}
+	20%{opacity: 20%;}
+	30% {opacity: 30%;}
+	40%{opacity: 40%;}
+	50% {opacity: 50%;}
+	60%{opacity: 60%;}
+	70%{opacity: 70%;}
+	80%{opacity: 80%;}
+	90%{opacity: 90%;};
+	100% {opacity: 100%;}
+  }
+  @keyframes Click_Effect {
+	50% {
+	  -webkit-transform: scale(1.5, 1.5);
+			  transform: scale(1.5, 1.5);
+	  opacity: 0;
+	}
+	99% {
+	  -webkit-transform: scale(0.001, 0.001);
+			  transform: scale(0.001, 0.001);
+	  opacity: 0;
+	}
+	100% {
+	  -webkit-transform: scale(0.001, 0.001);
+			  transform: scale(0.001, 0.001);
+	  opacity: 1;
+	}
+  }
+  @-webkit-keyframes Click_Effect {
+	50% {
+	  -webkit-transform: scale(1.5, 1.5);
+			  transform: scale(1.5, 1.5);
+	  opacity: 0;
+	}
+	99% {
+	  -webkit-transform: scale(0.001, 0.001);
+			  transform: scale(0.001, 0.001);
+	  opacity: 0;
+	}
+	100% {
+	  -webkit-transform: scale(0.001, 0.001);
+			  transform: scale(0.001, 0.001);
+	  opacity: 1;
+	}
   }
