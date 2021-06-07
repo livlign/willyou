@@ -13,7 +13,7 @@ var menu, menuContainer, isMenuShowing;
 var content, contentRect;
 var toggle, toggleRect;
 var buttonContainer, btnLeft, btnLeftInitRect, btnRight, btnRightInitRect;
-var movingButton, movingButtonRect;
+var movingButton, movingButtonRect, staticButton, staticButtonRect;
 var vara;
 var isDrawing = false;
 var isInit = true;
@@ -42,7 +42,10 @@ function initElements() {
 	movingButtonRect = movingButton.getBoundingClientRect();
 	movingButton.addEventListener('mouseover', move);
 	btnLeft.addEventListener('click', staticButtonClick);
-	
+
+	staticButtonRect = btnLeft;
+	staticButtonRect = staticButton.getBoundingClientRect();
+
 	isMenuShowing = false;
 
 	btnPlay.addEventListener('click', refreshView);
@@ -53,26 +56,34 @@ function initElements() {
 	rdoLeft.addEventListener('change', changeMovingButton);
 	rdoRight.addEventListener('change', changeMovingButton);
 }
-function initButtonsPosition(){
+function initButtonsPosition() {
 	buttonContainer.style.display = 'initial';
 	var divBottomRect = divBottom.getBoundingClientRect();
 	var middleX = Math.round(divBottomRect.width / 2);
 	var paddingLeft = 0;
-	if(isMenuShowing){
+	if (isMenuShowing) {
 		paddingLeft = divBottomRect.x - 10;
 	}
-	btnRight.style.top = divBottomRect.y;
+	btnRight.style.top = divBottomRect.y + 50;
 	btnRight.style.left = paddingLeft + middleX + 10;
-	btnLeft.style.top = divBottomRect.y;
-	btnLeft.style.left =  paddingLeft + middleX - btnLeft.getBoundingClientRect().width - 10;	
+	btnLeft.style.top = divBottomRect.y + 50;
+	btnLeft.style.left = paddingLeft + middleX - btnLeft.getBoundingClientRect().width - 10;
 	btnRightInitRect = btnRight.getBoundingClientRect();
 	btnLeftInitRect = btnLeft.getBoundingClientRect();
+
+	if (movingButton === btnLeft) {
+		staticButton = btnRight;
+		staticButtonRect = btnRightInitRect;
+	} else {
+		staticButton = btnLeft;
+		staticButtonRect = btnLeft;
+	}
 }
-function refreshView(){
+function refreshView() {
 	initButtonsPosition();
 	drawText();
 }
-function initVara(text) {	
+function initVara(text) {
 	buttonContainer.style.opacity = 0;
 	var element = document.getElementsByTagName('svg');
 	if (element && element[0]) {
@@ -96,7 +107,7 @@ function initVara(text) {
 		}, 200);
 	});
 }
-function showVaraEnd(text){
+function showVaraEnd(text) {
 	buttonContainer.style.opacity = 0;
 	buttonContainer.style.display = 'none';
 	var element = document.getElementsByTagName('svg');
@@ -114,16 +125,16 @@ function showVaraEnd(text){
 	}]);
 
 	setTimeout(() => {
-		vara.playAll();		
+		vara.playAll();
 	}, 100);
 }
 function drawText() {
 	var text = document.getElementById("txtMain").value;
 	isDrawing = true;
 	initVara(text);
-	
+
 	setTimeout(() => {
-		vara.playAll();		
+		vara.playAll();
 	}, 100);
 }
 function toggleMenu() {
@@ -147,38 +158,63 @@ function toggleMenu() {
 			toggle.style.animation = "";
 		}, 600);
 	}
-	isMenuShowing = !isMenuShowing;	
+	isMenuShowing = !isMenuShowing;
 	setTimeout(() => {
 		isInit = true;
 		initButtonsPosition();
 		drawText();
 	}, 500);
 }
-function staticButtonClick(){
+function staticButtonClick() {
 	setTimeout(() => {
-		movingButton.focus();	
+		movingButton.focus();
 		showVaraEnd('Sorry, too late!!!');
 	}, 300);
 }
 function move() {
-	contentRect = content.getBoundingClientRect();
-	var top = getRandomInt(window.innerHeight - contentRect.height + 50, window.innerHeight - movingButtonRect.height - 50);
-	var left = getRandomInt(window.innerWidth - contentRect.width + 50, window.innerWidth - movingButtonRect.width - 50);
-	var retry = 1;
-	while (retry < 1000 && (isNewPosInMainText(top, left) || isNewPosTooClose(top, left))) {
-		top = getRandomInt(window.innerHeight - contentRect.height + 50, window.innerHeight - movingButtonRect.height - 50);
-		left = getRandomInt(window.innerWidth - contentRect.width + 50, window.innerWidth - movingButtonRect.width - 50);
-		retry++;
-	}
-	movingButton.style.position = 'absolute';
-	movingButton.style.top = top + 'px';
-	movingButton.style.left = left + 'px';
+	var newPos = calculateNewPosToMove();
 
-	movingButton.style.animation = 'mymove 2s 1';
+	movingButton.style.position = 'absolute';
+	movingButton.style.top = newPos.newY + 'px';
+	movingButton.style.left = newPos.newX + 'px';
+
+	movingButton.style.animation = 'Move_Effect 2s 1';
 	setTimeout(() => {
 		movingButton.style.animation = '';
 	}, 2000);
 }
+function calculateNewPosToMove() {
+	const textRect = document.getElementById('vara-container').getBoundingClientRect();
+	document.getElementById('vara-container').style.border = '1px solid blue';
+	const staticBtnRect = staticButton.getBoundingClientRect();
+	const movingBtnRect = movingButton.getBoundingClientRect();
+	contentRect = content.getBoundingClientRect();
+
+	const moveableZones = [
+		{ id: 1, minX: contentRect.x, maxX: textRect.x, minY: 50, maxY: window.innerHeight - movingBtnRect.height }
+		, { id: 2, minX: textRect.x, maxX: contentRect.width / 2, minY: 10, maxY: textRect.y - movingBtnRect.height }
+		, { id: 3, minX: contentRect.width / 2, maxX: textRect.x + textRect.width - movingBtnRect.width, minY: 10, maxY: textRect.y - movingBtnRect.height }
+		, { id: 4, minX: textRect.x - 50 + textRect.width, maxX: window.innerWidth - movingBtnRect.width, minY: 10, maxY: window.innerHeight - movingBtnRect.height }
+		, { id: 5, minX: contentRect.width / 2, maxX: textRect.x + textRect.width - movingBtnRect.width, minY: textRect.y + textRect.height, maxY: window.innerHeight - movingBtnRect.height - 30 }
+		, { id: 6, minX: textRect.x, maxX: contentRect.width / 2, minY: textRect.y + textRect.height + staticBtnRect.height + 50, maxY: window.innerHeight - movingBtnRect.height - 30 }
+	];
+	let mvBtnInCurrentZone = 1;
+	let foundZone = false;
+	moveableZones.forEach((zone) => {
+		if (movingBtnRect.x >= zone.minX && movingBtnRect.x <= zone.maxX && movingBtnRect.y >= zone.minY && movingBtnRect.y <= zone.maxY) {
+			mvBtnInCurrentZone = zone.id;
+			foundZone = true;
+		}
+	});
+
+	let potentialZones = moveableZones.filter(x => x.id !== mvBtnInCurrentZone);
+	let chooseAPosition = getRandomInt(0, potentialZones.length - 1);
+
+	const newX = getRandomInt(potentialZones[chooseAPosition].minX, potentialZones[chooseAPosition].maxX);
+	const newY = getRandomInt(potentialZones[chooseAPosition].minY, potentialZones[chooseAPosition].maxY);
+	return { newX: newX, newY: newY };
+}
+
 function getRandomInt(min, max) {
 	min = Math.ceil(min);
 	max = Math.floor(max);
@@ -203,23 +239,4 @@ function changeMovingButton(event) {
 		movingButton.addEventListener('mouseover', move);
 		movingButton.removeEventListener('click', staticButtonClick);
 	}, 200);
-}
-function ResetButtonPos() {
-	if (btnLeftInitRect && btnRightInitRect) {
-		btnLeft.style.left = btnLeftInitRect.x;
-		btnLeft.style.top = btnLeftInitRect.y;
-		
-		btnRight.style.left = btnRightInitRect.x;
-		btnRight.style.top = btnRightInitRect.y;
-	}	
-}
-function isNewPosInMainText(top, left) {
-	var textRect = document.getElementById("vara-container").getBoundingClientRect();
-	var result = (top >= textRect.top && top <= textRect.height && left >= textRect.left && left <= textRect.width);
-	return result;
-}
-function isNewPosTooClose(top, left) {
-	movingButtonRect = movingButton.getBoundingClientRect();
-	var result = (Math.abs(top - movingButtonRect.y) <= 100 || Math.abs(left - movingButtonRect.x) <= 100);
-	return result;
 }
