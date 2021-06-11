@@ -17,15 +17,63 @@ var movingButton, movingButtonRect, staticButton, staticButtonRect;
 var vara;
 var isDrawing = false;
 var isInit = true;
+var data;
 
 docReady(function () {
 	initElements();
+
+	var defaultData = {
+		movingButton: 'right',
+		mainText: 'Will you marry me?',
+		btnLeftText: 'Yes',
+		btnRightText: 'No',
+		endText: 'Too late!!!',
+		speed: 5000
+	}
+	initMainData(defaultData);
+
 	setTimeout(() => {
 		drawText();
 	}, 200);
 });
 
+const model = {
+	movingButton: 'left' | 'right',
+	mainText: String,
+	btnLeftText: String,
+	btnRightText: String,
+	endText: String,
+	speed: Number,
+}
+function initMainData(source) {
+	data = {
+		movingButton: source.movingButton,
+		mainText: source.mainText,
+		btnLeftText: source.btnLeftText,
+		btnRightText: source.btnRightText,
+		endText: source.endText,
+		speed: source.speed
+	}
+
+	btnLeft.text = data.btnLeftText;
+	btnRight.text = data.btnRightText;
+
+	btnRight.removeEventListener('click', staticButtonClick);
+	movingButton = data.movingButton === 'right' ? btnRight : btnLeft;
+	staticButton = data.movingButton === 'right' ? btnLeft : btnRight;
+	movingButtonRect = movingButton.getBoundingClientRect();
+	staticButtonRect = staticButton.getBoundingClientRect();
+
+	movingButton.addEventListener('mouseover', move);
+	movingButton.removeEventListener('click', staticButtonClick);
+
+	staticButton.addEventListener('click', staticButtonClick);
+	staticButton.removeEventListener('mouseover', move);
+
+	initButtonsPosition();
+}
 function initElements() {
+	isMenuShowing = false;
 	divBottom = document.getElementById('div-bottom');
 	menu = document.getElementById('menu');
 	menuContainer = document.getElementById('menu-container');
@@ -36,17 +84,6 @@ function initElements() {
 	buttonContainer = document.getElementById('button-container');
 	btnLeft = document.getElementById('btn-left');
 	btnRight = document.getElementById('btn-right');
-	initButtonsPosition();
-
-	movingButton = btnRight;
-	movingButtonRect = movingButton.getBoundingClientRect();
-	movingButton.addEventListener('mouseover', move);
-	btnLeft.addEventListener('click', staticButtonClick);
-
-	staticButtonRect = btnLeft;
-	staticButtonRect = staticButton.getBoundingClientRect();
-
-	isMenuShowing = false;
 
 	btnPlay.addEventListener('click', refreshView);
 
@@ -96,7 +133,7 @@ function initVara(text) {
 		fontSize: 100,
 		strokeWidth: 1,
 		color: "#fff",
-		duration: 5000,
+		duration: data.speed,
 	}]);
 
 	vara.animationEnd(function (i, o) {
@@ -129,9 +166,8 @@ function showVaraEnd(text) {
 	}, 100);
 }
 function drawText() {
-	var text = document.getElementById("txtMain").value;
 	isDrawing = true;
-	initVara(text);
+	initVara(data.mainText);
 
 	setTimeout(() => {
 		vara.playAll();
@@ -214,7 +250,6 @@ function calculateNewPosToMove() {
 	const newY = getRandomInt(potentialZones[chooseAPosition].minY, potentialZones[chooseAPosition].maxY);
 	return { newX: newX, newY: newY };
 }
-
 function getRandomInt(min, max) {
 	min = Math.ceil(min);
 	max = Math.floor(max);
