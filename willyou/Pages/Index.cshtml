@@ -15,21 +15,75 @@
 </head>
 <body>
     <div id="menu" class="menu">
-        <div class="menuContainer" id="menu-container">
-            <input type="text" id="txtMain" style="margin-right: 15px;" value="Will you marry me?" />
-            <button id="btnPlay">Play</button>
-            <br>
-            Moving button
-            <br>
-            <input type="radio" id="rdo-left" name="movingButton" value="left">
-            <label for="left">Left</label><br>
-            <input type="radio" id="rdo-right" name="movingButton" value="right" checked>
-            <label for="right">Right</label><br>
+        <div class="div-toggle-menu">
+            <span id="toggle-menu" class="toggle-menu" onclick="toggleMenu()">>>></span> 
         </div>
-        <span id="toggle" class="toggle" onclick="toggleMenu()">>>></span>
+        <div class="menuContainer" id="menu-container">
+            <div class="menu-item">
+                <label>Main text</label>            
+                <input class="input-text" type="text" id="main-text" value="Will you marry me?" />
+            </div>
+           <div class="menu-item">
+                <label>Ending text</label>
+                <input class="input-text" type="text" id="end-text" value="Too late!!!" />
+           </div>
+           <div class="menu-item">
+                <label>Button text</label>
+                <div class="button-text">
+                    <input class="input-text button-text-input" type="text" id="left-button-text" value="Yes" />
+                    <input class="input-text button-text-input" type="text" id="right-button-text" value="No" />
+                </div>            
+            </div>
+           <div class="menu-item">
+               <label>Text size</label>
+               <div class="slidecontainer">
+                <input type="range" min="50" max="120" value="100" class="slider" id="font-size-selection">
+              </div>
+           </div>
+           <div class="menu-item">
+                <label>Text writing speed</label>
+                <div class="slidecontainer">
+                    <input type="range" min="1000" max="10000" value="5000" class="slider" id="speed-selection">
+                </div>
+            </div>
+            <div class="menu-item">
+                <div class="menu-suggestion-selection">
+                    <label class="label-switch">Moving button</label>
+                    <label class="switch">
+                        <input type="checkbox" id="toggle-moving-button">
+                        <div class="slider-switch round">
+                         <!--ADDED HTML -->
+                         <span class="on">LEFT</span>
+                         <span class="off">RIGHT</span>
+                         <!--END-->
+                        </div>
+                       </label>
+                </div>
+            </div>
+            <div class="menu-item">                
+                <div class="menu-suggestion-selection">
+                    <label class="label-switch">Menu suggestion</label>
+                    <label class="switch">
+                        <input type="checkbox" id="toggle-menu-suggestion" checked>
+                        <div class="slider-switch round">
+                         <!--ADDED HTML -->
+                         <span class="on">ON</span>
+                         <span class="off">OFF</span>
+                         <!--END-->
+                        </div>
+                       </label>
+                </div>
+            </div>
+            <button class="btn-refresh" id="btnPlay">Apply</button>
+            <button class="btn-refresh">Save & Share</button>
+            <label class="error-notice-label">*If the button positions rendered incorrectly, please toggle moving button again or click to the Apply button.</label>
+        </div>
     </div>
     <div id="content" class="content">
-        <div class="middle">
+        <div class="top">
+            <label id="menu-suggestion" class="menu-suggestion">Interesting? click here to make your own</label>
+        </div>
+        <div class="middle" id="div-middle">
             <div id="vara-container" class="vara-container"></div>
         </div>
         <div class="bottom" id="div-bottom">

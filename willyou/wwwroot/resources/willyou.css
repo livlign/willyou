@@ -5,20 +5,160 @@ background: linear-gradient(300deg, rgba(131,58,180,1) 0%, rgba(253,29,29,1) 50%
     flex-direction: row;
     margin: 0;
 }
-
 svg{
 	overflow: visible;
 }
+textarea:focus, input:focus{
+    outline: none;
+}
+input[type='radio']:after {
+	width: 15px;
+	height: 15px;
+	border-radius: 15px;
+	top: -2px;
+	left: -1px;
+	position: relative;
+	background-color: #d1d3d1;
+	content: '';
+	display: inline-block;
+	visibility: visible;
+	border: 2px solid white;
+}
 
+input[type='radio']:checked:after {
+	width: 15px;
+	height: 15px;
+	border-radius: 15px;
+	top: -2px;
+	left: -1px;
+	position: relative;
+	background-color: #292929;
+	content: '';
+	display: inline-block;
+	visibility: visible;
+	border: 2px solid white;
+}
+.error-notice-label{
+	font-size: 16px;
+	font-style: italic;
+}
 .menu{
     background-color: transparent;
 	transition: all .5s ease-in-out;
-	-webkit-transition: all .5s ease-in-out;
+	-webkit-transition: all .5s ease-in-out;		
 }
 
 .menuContainer{
 	display: none;
+	color:#ffffff;
+	font-weight: 500;
+	margin-top: 30px;	
+	margin-left: 10px;
+	font-size: 18px;
+}
+.btn-refresh{
+	width: 95%;
+	height: 50px;
+	background-color: transparent;
+	border-radius: 5px;
+	border: 1px solid white;
+	cursor: pointer;
+	font-size: 24px;
+	letter-spacing: 0.1em;
 	color: white;
+	transition: all .5s ease;
+	margin-bottom: 15px;
+}
+.btn-refresh:hover{
+	cursor: pointer;
+	color: #ffff70;
+	border-color: #ffff70;
+	border-radius: 20px;
+}
+
+.input-text{
+	margin-right: 10px;
+	margin-top: 5px;
+	border: 2px solid rgb(255, 255, 255);
+	border-radius: 5px;
+	height: 30px;
+	font-size: 16px;
+	padding: 2px;	
+}
+.input-text:focus{
+	border: 1px solid rgb(0, 0, 0);
+	color: rgb(0, 4, 255);
+}
+.menu-item{
+	display: flex;
+	flex-direction: column;
+	margin-bottom: 10px;	
+}
+.button-text{
+	display: flex;
+	flex-direction: row;
+}
+.button-text-label{
+	margin-top: 5px;
+	margin-right: 5px;
+}
+.button-text-input{
+	min-width: 80px;
+	text-align: center;
+}
+.slidecontainer {
+	width: 100%; /* Width of the outside container */
+  }
+  
+  /* The slider itself */
+  .slider {
+	-webkit-appearance: none;  /* Override default CSS styles */
+	appearance: none;
+	border-radius: 4px;
+	width: 95%; /* Full-width */
+	height: 25px; /* Specified height */
+	background: #ffffff; /* Grey background */
+	outline: none; /* Remove outline */
+	-webkit-transition: .2s; /* 0.2 seconds transition on hover */
+	transition: opacity .2s;
+  }
+  
+  /* Mouse-over effects */
+  .slider:hover {
+	background: #d6d6d6;
+	cursor: pointer;
+  }
+  
+  /* The slider handle (use -webkit- (Chrome, Opera, Safari, Edge) and -moz- (Firefox) to override default look) */
+  .slider::-webkit-slider-thumb {
+	-webkit-appearance: none; /* Override default look */
+	appearance: none;
+	border-radius: 5px;;
+	width: 25px; /* Set a specific slider handle width */
+	height: 25px; /* Slider handle height */
+	background: #505050; /* Green background */
+	cursor: pointer; /* Cursor on hover */
+  }
+  
+  .slider::-moz-range-thumb {
+	width: 25px; /* Set a specific slider handle width */
+	height: 25px; /* Slider handle height */
+	background: #04AA6D; /* Green background */
+	cursor: pointer; /* Cursor on hover */
+  }
+
+.rdo-moving-button { 
+	margin-right: 10px;
+	cursor: pointer;	
+}
+.rdo-moving-button-right{
+	margin-left: 20px;
+	cursor: pointer;	
+}
+.moving-button-selection{
+	margin-top: 5px;
+	display:flex;
+	flex-direction: row;	
 }
 
 .content{
@@ -29,21 +169,36 @@ svg{
 	align-items: center;
 }
 
-.toggle {
+
+.div-toggle.menu{
+	display: flex;
+	flex-direction: row;
+	float: right;
+}
+.toggle-menu {
     position: relative;
     float: right;
-	font-size: 20px;
+	font-size: 24px;
 	color:#fff;
 	font-weight: bold;
 	letter-spacing: .1em;
 	cursor: pointer;
+	transition: all 1s ease;
 }
 
 .top{
-	flex-grow: 1;
+	width: 100%;
 	display: flex;
-	justify-content: center;
-	align-items: center;
+	flex-direction: row;
+}
+.menu-suggestion{
+	margin:3 0 0 10;
+	color: white;
+	transition: all 2s ease;
+	font-size: 18px;
+	letter-spacing: 0.1em;
+	position: absolute;
+	opacity: 0;
 }
 
 .middle{
@@ -90,11 +245,6 @@ svg{
 	transition: all .2s ease-in-out;
 }
 
-@keyframes blink {
-	50% {
-	  opacity: 0;
-	}
-  }
 
 
   .btn-static span[class^='ion'] {
@@ -120,9 +270,102 @@ svg{
 	-webkit-animation: Click_Effect 0.8s ease-out;
 			animation: Click_Effect 0.8s ease-out;
   }
+.menu-suggestion-selection{
+	display: flex;
+	flex-direction: row;
+}
+.label-switch{
+	margin-right: 10px; 
+	margin-top: 2px;
+	min-width: 130px;
+}
+.switch {
+	position: relative;
+	display: inline-block;
+	width: 105px;
+	height: 30px;
+  }
+  
+  .switch input {display:none;}
+  
+  .slider-switch {
+	position: absolute;
+	cursor: pointer;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	background-color: #272727;
+	-webkit-transition: .4s;
+	transition: .4s;
+  }
+  
+  .slider-switch:before {
+	position: absolute;
+	content: "";
+	height: 20px;
+	width: 20px;
+	left: 4px;
+	bottom: 5px;
+	background-color: white;
+	-webkit-transition: .4s;
+	transition: .4s;
+  }
+  
+  input:checked + .slider-switch {
+	background-color: #505050;
+  }
+  
+  input:focus + .slider-switch {
+	box-shadow: 0 0 1px #2196F3;
+  }
+  
+  input:checked + .slider-switch:before {
+	-webkit-transform: translateX(75px);
+	-ms-transform: translateX(75px);
+	transform: translateX(75px);
+  }
+  
+  /*------ ADDED CSS ---------*/
+  .on
+  {
+	display: none;
+  }
+  
+  .on, .off
+  {
+	color: white;
+	position: absolute;
+	transform: translate(-50%,-50%);
+	top: 45%;
+	left: 50%;
+	font-size: 14px;
+	font-family: Verdana, sans-serif;
+  }
+  
+  input:checked+ .slider-switch .on
+  {display: block;}
+  
+  input:checked + .slider-switch .off
+  {display: none;}
+  
+  /*--------- END --------*/
+  
+  /* Rounded sliders */
+  .slider-switch.round {
+	border-radius: 34px;
+  }
+  
+  .slider-switch.round:before {
+	border-radius: 50%;}
 
 
 /* animation effects */
+@keyframes blink {
+	50% {
+	  opacity: 0;
+	}
+  }
   @keyframes Move_Effect {
 	0% {opacity: 0%;}
 	10%{opacity: 10%;}

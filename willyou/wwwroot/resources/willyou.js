@@ -8,27 +8,29 @@
 	}
 }
 
-var divBottom;
-var menu, menuContainer, isMenuShowing;
+var divMiddle, divBottom;
+var menu, menuContainer, isMenuShowing, menuSuggestion, toggleMovingButton;
 var content, contentRect;
 var toggle, toggleRect;
 var buttonContainer, btnLeft, btnLeftInitRect, btnRight, btnRightInitRect;
 var movingButton, movingButtonRect, staticButton, staticButtonRect;
-var vara;
+var vara, varaContainer;
 var isDrawing = false;
 var isInit = true;
-var data;
+var data, rdoMovingButtonValue;
 
 docReady(function () {
 	initElements();
 
 	var defaultData = {
 		movingButton: 'right',
+		fontSize: 100,
 		mainText: 'Will you marry me?',
 		btnLeftText: 'Yes',
 		btnRightText: 'No',
 		endText: 'Too late!!!',
-		speed: 5000
+		speed: 5000,
+		suggestionMenu: true
 	}
 	initMainData(defaultData);
 
@@ -47,16 +49,18 @@ const model = {
 }
 function initMainData(source) {
 	data = {
+		fontSize: source.fontSize,
 		movingButton: source.movingButton,
 		mainText: source.mainText,
 		btnLeftText: source.btnLeftText,
 		btnRightText: source.btnRightText,
 		endText: source.endText,
-		speed: source.speed
+		speed: source.speed,
+		suggestionMenu: source.suggestionMenu
 	}
 
-	btnLeft.text = data.btnLeftText;
-	btnRight.text = data.btnRightText;
+	btnLeft.textContent = data.btnLeftText;
+	btnRight.textContent = data.btnRightText;
 
 	btnRight.removeEventListener('click', staticButtonClick);
 	movingButton = data.movingButton === 'right' ? btnRight : btnLeft;
@@ -68,17 +72,16 @@ function initMainData(source) {
 	movingButton.removeEventListener('click', staticButtonClick);
 
 	staticButton.addEventListener('click', staticButtonClick);
-	staticButton.removeEventListener('mouseover', move);
-
-	initButtonsPosition();
+	staticButton.removeEventListener('mouseover', move);	
 }
 function initElements() {
 	isMenuShowing = false;
+	varaContainer = document.getElementById('vara-container');
+	divMiddle = document.getElementById('div-middle');
 	divBottom = document.getElementById('div-bottom');
-	menu = document.getElementById('menu');
-	menuContainer = document.getElementById('menu-container');
 	content = document.getElementById('content');
-	toggle = document.getElementById('toggle');
+	toggle = document.getElementById('toggle-menu');
+	toggle.style.animation = "blink 3s linear infinite";
 	toggleRect = toggle.getBoundingClientRect();
 
 	buttonContainer = document.getElementById('button-container');
@@ -88,49 +91,72 @@ function initElements() {
 	btnPlay.addEventListener('click', refreshView);
 
 	//menu
-	var rdoLeft = document.getElementById('rdo-left');
-	var rdoRight = document.getElementById('rdo-right');
-	rdoLeft.addEventListener('change', changeMovingButton);
-	rdoRight.addEventListener('change', changeMovingButton);
+	menu = document.getElementById('menu');
+	menuContainer = document.getElementById('menu-container');
+	menuSuggestion = document.getElementById('menu-suggestion');
+
+	toggleMovingButton = document.getElementById('toggle-moving-button');
+	toggleMovingButton.addEventListener('change', changeMovingButton);
+	rdoMovingButtonValue = 'right';
 }
 function initButtonsPosition() {
 	buttonContainer.style.display = 'initial';
-	var divBottomRect = divBottom.getBoundingClientRect();
-	var middleX = Math.round(divBottomRect.width / 2);
+	var varaRect = varaContainer.getBoundingClientRect();
+	var divBottomRect = content.getBoundingClientRect();
+	var middleX = divBottomRect.width / 2;
 	var paddingLeft = 0;
+	var divMenu = document.getElementById('menu');
 	if (isMenuShowing) {
-		paddingLeft = divBottomRect.x - 10;
+		paddingLeft = divMenu.getBoundingClientRect().width;
+	}else{
+		paddingLeft = toggleRect.width;
 	}
-	btnRight.style.top = divBottomRect.y + 50;
-	btnRight.style.left = paddingLeft + middleX + 10;
-	btnLeft.style.top = divBottomRect.y + 50;
+	
+	btnLeft.style.top = varaRect.y + varaRect.height + 20;
 	btnLeft.style.left = paddingLeft + middleX - btnLeft.getBoundingClientRect().width - 10;
+	btnRight.style.top = varaRect.y + varaRect.height + 20;
+	btnRight.style.left = btnLeft.getBoundingClientRect().x + btnLeft.getBoundingClientRect().width + 10;
+
 	btnRightInitRect = btnRight.getBoundingClientRect();
 	btnLeftInitRect = btnLeft.getBoundingClientRect();
 
-	if (movingButton === btnLeft) {
-		staticButton = btnRight;
-		staticButtonRect = btnRightInitRect;
-	} else {
-		staticButton = btnLeft;
-		staticButtonRect = btnLeft;
-	}
 }
 function refreshView() {
-	initButtonsPosition();
-	drawText();
+	const mainText = document.getElementById('main-text').value;
+	const endText = document.getElementById('end-text').value;
+	const fontSize = document.getElementById('font-size-selection').value;
+	const speed = document.getElementById('speed-selection').value;
+	const leftText = document.getElementById('left-button-text').value;
+	const rightText = document.getElementById('right-button-text').value;
+	const suggestionMenu = document.getElementById('toggle-menu-suggestion').checked;
+	var data = {
+		movingButton: rdoMovingButtonValue,
+		fontSize: fontSize,
+		mainText: mainText,
+		btnLeftText: leftText,
+		btnRightText: rightText,
+		endText: endText,
+		speed: speed,
+		suggestionMenu: suggestionMenu
+	}
+	initMainData(data);
+
+	setTimeout(() => {
+		drawText();
+	}, 200);
 }
-function initVara(text) {
+function initVara() {
 	buttonContainer.style.opacity = 0;
+	menuSuggestion.style.opacity = 0;
 	var element = document.getElementsByTagName('svg');
 	if (element && element[0]) {
 		element[0].remove();
 	}
 	vara = new Vara("#vara-container", "../resources/fonts/SatisfySL.json", [{
 		autoAnimation: false,
-		text: text,
+		text: data.mainText,
 		textAlign: "center",
-		fontSize: 100,
+		fontSize: data.fontSize,
 		strokeWidth: 1,
 		color: "#fff",
 		duration: data.speed,
@@ -138,13 +164,14 @@ function initVara(text) {
 
 	vara.animationEnd(function (i, o) {
 		isDrawing = false;
+		initButtonsPosition();
 		setTimeout(() => {
 			buttonContainer.style.opacity = 1;
 			buttonContainer.style.transition = 'all 1s ease-in-out';
-		}, 200);
+		}, 200);		
 	});
 }
-function showVaraEnd(text) {
+function showVaraEnd() {
 	buttonContainer.style.opacity = 0;
 	buttonContainer.style.display = 'none';
 	var element = document.getElementsByTagName('svg');
@@ -153,21 +180,27 @@ function showVaraEnd(text) {
 	}
 	vara = new Vara("#vara-container", "../resources/fonts/SatisfySL.json", [{
 		autoAnimation: false,
-		text: text,
+		text: data.endText,
 		textAlign: "center",
-		fontSize: 100,
+		fontSize: data.fontSize,
 		strokeWidth: 1,
 		color: "#fff",
-		duration: 5000,
+		duration: data.speed,
 	}]);
-
+	vara.animationEnd(function(i, o) {
+		setTimeout(() => {
+			if(data.suggestionMenu){
+				menuSuggestion.style.opacity = 100;
+			}
+		}, 1000);
+	});
 	setTimeout(() => {
-		vara.playAll();
+		vara.playAll();		
 	}, 100);
 }
 function drawText() {
 	isDrawing = true;
-	initVara(data.mainText);
+	initVara();
 
 	setTimeout(() => {
 		vara.playAll();
@@ -177,18 +210,19 @@ function toggleMenu() {
 	if (isMenuShowing) {
 		content.style.width = '100%';
 		menu.style.width = toggleRect.width + 10;
-		menu.style.backgroundColor = 'transparent';
+		menu.style.borderRight = "hidden";
 		menuContainer.style.display = 'none';
-		toggle.style.animation = "blink 1s linear infinite";
+		toggle.style.animation = "blink 3s linear infinite";
 		setTimeout(() => {
 			toggle.textContent = '>>>';
 		}, 600);
 	}
 	else {
 		content.style.width = '80%';
-		menu.style.width = '20%';
-		menu.style.backgroundColor = 'blue';
+		menu.style.width = '20%';		
+		menu.style.borderRight = "2px solid white";
 		menuContainer.style.display = 'inherit';
+		menuSuggestion.style.opacity = 0;		
 		setTimeout(() => {
 			toggle.textContent = '<<<';
 			toggle.style.animation = "";
@@ -204,7 +238,7 @@ function toggleMenu() {
 function staticButtonClick() {
 	setTimeout(() => {
 		movingButton.focus();
-		showVaraEnd('Sorry, too late!!!');
+		showVaraEnd(data.endText);
 	}, 300);
 }
 function move() {
@@ -221,7 +255,6 @@ function move() {
 }
 function calculateNewPosToMove() {
 	const textRect = document.getElementById('vara-container').getBoundingClientRect();
-	document.getElementById('vara-container').style.border = '1px solid blue';
 	const staticBtnRect = staticButton.getBoundingClientRect();
 	const movingBtnRect = movingButton.getBoundingClientRect();
 	contentRect = content.getBoundingClientRect();
@@ -235,17 +268,14 @@ function calculateNewPosToMove() {
 		, { id: 6, minX: textRect.x, maxX: contentRect.width / 2, minY: textRect.y + textRect.height + staticBtnRect.height + 50, maxY: window.innerHeight - movingBtnRect.height - 30 }
 	];
 	let mvBtnInCurrentZone = 1;
-	let foundZone = false;
 	moveableZones.forEach((zone) => {
 		if (movingBtnRect.x >= zone.minX && movingBtnRect.x <= zone.maxX && movingBtnRect.y >= zone.minY && movingBtnRect.y <= zone.maxY) {
 			mvBtnInCurrentZone = zone.id;
-			foundZone = true;
 		}
 	});
-
+	
 	let potentialZones = moveableZones.filter(x => x.id !== mvBtnInCurrentZone);
 	let chooseAPosition = getRandomInt(0, potentialZones.length - 1);
-
 	const newX = getRandomInt(potentialZones[chooseAPosition].minX, potentialZones[chooseAPosition].maxX);
 	const newY = getRandomInt(potentialZones[chooseAPosition].minY, potentialZones[chooseAPosition].maxY);
 	return { newX: newX, newY: newY };
@@ -255,23 +285,23 @@ function getRandomInt(min, max) {
 	max = Math.floor(max);
 	return Math.floor(Math.random() * (max - min + 1)) + min;
 }
-function changeMovingButton(event) {
+function changeMovingButton() {
 	initButtonsPosition();
-	if (event.target.value == 'left') {
-		btnRight.classList.add('btn-static');
-		btnRight.addEventListener('click', staticButtonClick);
-		btnRight.removeEventListener('mouseover', move);
+	
+	if (toggleMovingButton.checked) {		
 		movingButton = btnLeft;
-		btnLeft.classList.remove('btn-static');
+		staticButton = btnRight;
+		rdoMovingButtonValue = 'left'
 	} else {
-		btnLeft.classList.add('btn-static')
-		btnLeft.addEventListener('click', staticButtonClick);
-		btnLeft.removeEventListener('mouseover', move);
 		movingButton = btnRight;
-		btnRight.classList.remove('btn-static');
-	}
-	setTimeout(() => {
-		movingButton.addEventListener('mouseover', move);
-		movingButton.removeEventListener('click', staticButtonClick);
-	}, 200);
+		staticButton = btnLeft;
+		rdoMovingButtonValue = 'right';
+	}	
+	staticButton.classList.add('btn-static');
+	staticButton.removeEventListener('mouseover', move);
+	staticButton.addEventListener('click', staticButtonClick);
+
+	movingButton.classList.remove('btn-static');
+	movingButton.removeEventListener('click', staticButtonClick);
+	movingButton.addEventListener('mouseover', move);
 }
