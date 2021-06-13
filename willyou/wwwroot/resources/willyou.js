@@ -34,9 +34,7 @@ docReady(function () {
 	}
 	initMainData(defaultData);
 
-	setTimeout(() => {
-		drawText();
-	}, 200);
+	drawText();
 });
 
 const model = {
@@ -119,7 +117,6 @@ function initButtonsPosition() {
 
 	btnRightInitRect = btnRight.getBoundingClientRect();
 	btnLeftInitRect = btnLeft.getBoundingClientRect();
-
 }
 function refreshView() {
 	const mainText = document.getElementById('main-text').value;
@@ -204,7 +201,7 @@ function drawText() {
 
 	setTimeout(() => {
 		vara.playAll();
-	}, 100);
+	}, 500);
 }
 function toggleMenu() {
 	if (isMenuShowing) {

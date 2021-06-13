@@ -38,6 +38,13 @@ input[type='radio']:checked:after {
 	visibility: visible;
 	border: 2px solid white;
 }
+.contact-me{
+	position:absolute;
+	bottom:5px;
+	left:5px;
+	font-size: 16px;
+	font-style: italic;
+}
 .error-notice-label{
 	font-size: 16px;
 	font-style: italic;
