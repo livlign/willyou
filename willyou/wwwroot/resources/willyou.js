@@ -7,6 +7,15 @@
 		document.addEventListener("DOMContentLoaded", fn);
 	}
 }
+// shim layer with setTimeout fallback
+window.requestAnimFrame = (function(){
+	return  window.requestAnimationFrame       ||
+			window.webkitRequestAnimationFrame ||
+			window.mozRequestAnimationFrame    ||
+			function( callback ){
+			  window.setTimeout(callback, 1000 / 60);
+			};
+  })();
 
 var divMiddle, divBottom;
 var menu, menuContainer, isMenuShowing, menuSuggestion, toggleMovingButton;
@@ -18,25 +27,30 @@ var vara, varaContainer;
 var isDrawing = false;
 var isInit = true;
 var data, rdoMovingButtonValue;
+var btnSave, txtSaveResult;
 
 docReady(function () {
 	initElements();
 
 	var defaultData = {
-		movingButton: 'right',
-		fontSize: 100,
-		mainText: 'Will you marry me?',
-		btnLeftText: 'Yes',
-		btnRightText: 'No',
-		endText: 'Too late!!!',
-		speed: 5000,
-		suggestionMenu: true
+		movingButton: document.getElementById('toggle-moving-button').checked ? 'left' : 'right',
+		fontSize: parseInt(document.getElementById('font-size-selection').value),
+		mainText: document.getElementById('main-text').value,
+		btnLeftText: document.getElementById('left-button-text').value,
+		btnRightText: document.getElementById('right-button-text').value,
+		endText: document.getElementById('end-text').value,
+		speed: parseInt(document.getElementById('speed-selection').value),
+		suggestionMenu: document.getElementById('toggle-menu-suggestion').checked
 	}
 	initMainData(defaultData);
 
 	drawText();
 });
 
+
+function showCor(event){
+	console.log(event.clientX, event.clientY);
+}
 const model = {
 	movingButton: 'left' | 'right',
 	mainText: String,
@@ -68,9 +82,11 @@ function initMainData(source) {
 
 	movingButton.addEventListener('mouseover', move);
 	movingButton.removeEventListener('click', staticButtonClick);
+	movingButton.classList.remove('btn-static');
 
 	staticButton.addEventListener('click', staticButtonClick);
 	staticButton.removeEventListener('mouseover', move);	
+	staticButton.classList.add('btn-static');
 }
 function initElements() {
 	isMenuShowing = false;
@@ -95,8 +111,40 @@ function initElements() {
 
 	toggleMovingButton = document.getElementById('toggle-moving-button');
 	toggleMovingButton.addEventListener('change', changeMovingButton);
-	rdoMovingButtonValue = 'right';
+	rdoMovingButtonValue = 'right';	
+
+	btnSave = document.getElementById('btnSave');
+	btnSave.onclick = onBtnSaveClick;
+	txtSaveResult = document.getElementById('save-result');
 }
+
+function onBtnSaveClick() {
+    fetch('/',
+        {
+            method: "POST",
+            body: JSON.stringify({
+				'MainText': document.getElementById('main-text').value,
+				'EndText': document.getElementById('end-text').value,
+				'BtnLeftText': document.getElementById('left-button-text').value,
+				'BtnRightText': document.getElementById('right-button-text').value,
+				'TextSize': parseInt(document.getElementById('font-size-selection').value),
+				'WritingSpeed': parseInt(document.getElementById('speed-selection').value),
+				'MovingButton': document.getElementById('toggle-moving-button').checked,
+				'MenuSuggestion': document.getElementById('toggle-menu-suggestion').checked,
+			}),
+            headers: {
+                'RequestVerificationToken': document.getElementsByName("__RequestVerificationToken")[0].value,
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+            }
+        })
+        .then(function (res) { return res.json(); })
+        .then(function (data) { 
+			let result = `willyou.io/?id=${data}`;
+			txtSaveResult.value = result;
+		})
+}
+
 function initButtonsPosition() {
 	buttonContainer.style.display = 'initial';
 	var varaRect = varaContainer.getBoundingClientRect();
@@ -238,6 +286,28 @@ function staticButtonClick() {
 		showVaraEnd(data.endText);
 	}, 300);
 }
+
+//TODO: use requestAnimatedFrame
+//var rafId, start, newPos;
+//var movingStep = 30;
+// let movingFunction = function (timestamp){
+// 	start = !start ? Math.round(timestamp) : start;
+// 	var cx = Math.round(movingButton.getBoundingClientRect().x);
+// 	var cy = Math.round(movingButton.getBoundingClientRect().y);
+// 	var distanceX = newPos.newX - cx;
+// 	var distanceY = newPos.newY - cy;
+// 	console.log(start, Math.round(timestamp), cx, cy, newPos.newX, newPos.newY, distanceX, distanceY);	
+
+// 	// if(cx >= newPos.newX + movingStep || cx <= newPos.X - movingStep){
+// 	// 	var n = cx > newPos.newX ? -1 * movingStep : 1 * movingStep;
+// 	// 	movingButton.style.left = cx + n + 'px';
+// 	// 	rafId = requestAnimationFrame(movingFunction);
+// 	// }
+// 	// else{
+// 	// 	cancelAnimationFrame(rafId);
+// 	// }
+// }
+
 function move() {
 	var newPos = calculateNewPosToMove();
 
@@ -250,6 +320,7 @@ function move() {
 		movingButton.style.animation = '';
 	}, 2000);
 }
+
 function calculateNewPosToMove() {
 	const textRect = document.getElementById('vara-container').getBoundingClientRect();
 	const staticBtnRect = staticButton.getBoundingClientRect();
@@ -273,6 +344,7 @@ function calculateNewPosToMove() {
 	
 	let potentialZones = moveableZones.filter(x => x.id !== mvBtnInCurrentZone);
 	let chooseAPosition = getRandomInt(0, potentialZones.length - 1);
+	
 	const newX = getRandomInt(potentialZones[chooseAPosition].minX, potentialZones[chooseAPosition].maxX);
 	const newY = getRandomInt(potentialZones[chooseAPosition].minY, potentialZones[chooseAPosition].maxY);
 	return { newX: newX, newY: newY };
