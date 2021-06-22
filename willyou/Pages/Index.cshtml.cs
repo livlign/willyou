@@ -20,7 +20,7 @@ namespace willyou.Pages
         {
             _hostEnvironment = hostEnvironment;
             RootFolder = _hostEnvironment.WebRootPath;
-            IdeaFolder = Path.Combine(RootFolder, "Ideas");
+            IdeaFolder = Path.Combine(RootFolder, "Ideas", DateTime.Now.Year.ToString(), DateTime.Now.Month.ToString());
         }
         public HiddenIdea Idea { get; set; }
         public void OnGet(double id)

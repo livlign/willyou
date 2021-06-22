@@ -8,14 +8,14 @@
 	}
 }
 // shim layer with setTimeout fallback
-window.requestAnimFrame = (function(){
-	return  window.requestAnimationFrame       ||
-			window.webkitRequestAnimationFrame ||
-			window.mozRequestAnimationFrame    ||
-			function( callback ){
-			  window.setTimeout(callback, 1000 / 60);
-			};
-  })();
+window.requestAnimFrame = (function () {
+	return window.requestAnimationFrame ||
+		window.webkitRequestAnimationFrame ||
+		window.mozRequestAnimationFrame ||
+		function (callback) {
+			window.setTimeout(callback, 1000 / 60);
+		};
+})();
 
 var divMiddle, divBottom;
 var menu, menuContainer, isMenuShowing, menuSuggestion, toggleMovingButton;
@@ -27,7 +27,7 @@ var vara, varaContainer;
 var isDrawing = false;
 var isInit = true;
 var data, rdoMovingButtonValue;
-var btnSave, txtSaveResult;
+var btnSave, txtSaveResult, btnOpenResult, btnCopyResult;
 
 docReady(function () {
 	initElements();
@@ -48,7 +48,7 @@ docReady(function () {
 });
 
 
-function showCor(event){
+function showCor(event) {
 	console.log(event.clientX, event.clientY);
 }
 const model = {
@@ -85,7 +85,7 @@ function initMainData(source) {
 	movingButton.classList.remove('btn-static');
 
 	staticButton.addEventListener('click', staticButtonClick);
-	staticButton.removeEventListener('mouseover', move);	
+	staticButton.removeEventListener('mouseover', move);
 	staticButton.classList.add('btn-static');
 }
 function initElements() {
@@ -111,18 +111,45 @@ function initElements() {
 
 	toggleMovingButton = document.getElementById('toggle-moving-button');
 	toggleMovingButton.addEventListener('change', changeMovingButton);
-	rdoMovingButtonValue = 'right';	
+	rdoMovingButtonValue = 'right';
 
-	btnSave = document.getElementById('btnSave');
-	btnSave.onclick = onBtnSaveClick;
+	//save result
 	txtSaveResult = document.getElementById('save-result');
+	btnSave = document.getElementById('btnSave');
+	btnOpenResult = document.getElementById('btn-open-result');
+	btnCopyResult = document.getElementById('btn-copy-result');
+	btnSave.addEventListener('click', btnSaveClick);
+	btnOpenResult.addEventListener('click', openResult);
+	btnCopyResult.addEventListener('click', copyResult);
 }
+function openResult() {
+	var result = txtSaveResult.value;
+	if (!result || result === '') return;
 
-function onBtnSaveClick() {
-    fetch('/',
-        {
-            method: "POST",
-            body: JSON.stringify({
+	window.open(result, '_blank').focus();
+}
+function copyResult() {
+	var result = txtSaveResult.value;
+	if (!result || result === '') return;
+	/* Select the text field */
+	txtSaveResult.select();
+	txtSaveResult.setSelectionRange(0, 99999); /* For mobile devices */
+	/* Copy the text inside the text field */
+	document.execCommand("copy");
+
+	btnCopyResult.textContent = 'Copied';
+	setTimeout(() => {
+		btnCopyResult.textContent = 'Copy';
+	}, 1000);
+}
+function btnSaveClick() {
+	btnSave.textContent = 'Saving...';
+	btnSave.removeEventListener('click', btnSaveClick);
+	document.getElementById('save-result-container').style.display = 'none';
+	fetch('/',
+		{
+			method: "POST",
+			body: JSON.stringify({
 				'MainText': document.getElementById('main-text').value,
 				'EndText': document.getElementById('end-text').value,
 				'BtnLeftText': document.getElementById('left-button-text').value,
@@ -132,16 +159,19 @@ function onBtnSaveClick() {
 				'MovingButton': document.getElementById('toggle-moving-button').checked,
 				'MenuSuggestion': document.getElementById('toggle-menu-suggestion').checked,
 			}),
-            headers: {
-                'RequestVerificationToken': document.getElementsByName("__RequestVerificationToken")[0].value,
-                'Content-Type': 'application/json',
-                'Accept': 'application/json',
-            }
-        })
-        .then(function (res) { return res.json(); })
-        .then(function (data) { 
-			let result = `willyou.io/?id=${data}`;
+			headers: {
+				'RequestVerificationToken': document.getElementsByName("__RequestVerificationToken")[0].value,
+				'Content-Type': 'application/json',
+				'Accept': 'application/json',
+			}
+		})
+		.then(function (res) { return res.json(); })
+		.then(function (data) {
+			let result = `${window.location.origin}?id=${data}`;
 			txtSaveResult.value = result;
+			btnSave.textContent = 'Save & Share';
+			btnSave.addEventListener('click', btnSaveClick);
+			document.getElementById('save-result-container').style.display = 'flex';
 		})
 }
 
@@ -154,10 +184,10 @@ function initButtonsPosition() {
 	var divMenu = document.getElementById('menu');
 	if (isMenuShowing) {
 		paddingLeft = divMenu.getBoundingClientRect().width;
-	}else{
+	} else {
 		paddingLeft = toggleRect.width;
 	}
-	
+
 	btnLeft.style.top = varaRect.y + varaRect.height + 20;
 	btnLeft.style.left = paddingLeft + middleX - btnLeft.getBoundingClientRect().width - 10;
 	btnRight.style.top = varaRect.y + varaRect.height + 20;
@@ -213,7 +243,7 @@ function initVara() {
 		setTimeout(() => {
 			buttonContainer.style.opacity = 1;
 			buttonContainer.style.transition = 'all 1s ease-in-out';
-		}, 200);		
+		}, 200);
 	});
 }
 function showVaraEnd() {
@@ -232,15 +262,15 @@ function showVaraEnd() {
 		color: "#fff",
 		duration: data.speed,
 	}]);
-	vara.animationEnd(function(i, o) {
+	vara.animationEnd(function (i, o) {
 		setTimeout(() => {
-			if(data.suggestionMenu){
+			if (data.suggestionMenu) {
 				menuSuggestion.style.opacity = 100;
 			}
 		}, 1000);
 	});
 	setTimeout(() => {
-		vara.playAll();		
+		vara.playAll();
 	}, 100);
 }
 function drawText() {
@@ -264,10 +294,10 @@ function toggleMenu() {
 	}
 	else {
 		content.style.width = '80%';
-		menu.style.width = '20%';		
+		menu.style.width = '20%';
 		menu.style.borderRight = "2px solid white";
 		menuContainer.style.display = 'inherit';
-		menuSuggestion.style.opacity = 0;		
+		menuSuggestion.style.opacity = 0;
 		setTimeout(() => {
 			toggle.textContent = '<<<';
 			toggle.style.animation = "";
@@ -341,10 +371,10 @@ function calculateNewPosToMove() {
 			mvBtnInCurrentZone = zone.id;
 		}
 	});
-	
+
 	let potentialZones = moveableZones.filter(x => x.id !== mvBtnInCurrentZone);
 	let chooseAPosition = getRandomInt(0, potentialZones.length - 1);
-	
+
 	const newX = getRandomInt(potentialZones[chooseAPosition].minX, potentialZones[chooseAPosition].maxX);
 	const newY = getRandomInt(potentialZones[chooseAPosition].minY, potentialZones[chooseAPosition].maxY);
 	return { newX: newX, newY: newY };
@@ -356,8 +386,8 @@ function getRandomInt(min, max) {
 }
 function changeMovingButton() {
 	initButtonsPosition();
-	
-	if (toggleMovingButton.checked) {		
+
+	if (toggleMovingButton.checked) {
 		movingButton = btnLeft;
 		staticButton = btnRight;
 		rdoMovingButtonValue = 'left'
@@ -365,7 +395,7 @@ function changeMovingButton() {
 		movingButton = btnRight;
 		staticButton = btnLeft;
 		rdoMovingButtonValue = 'right';
-	}	
+	}
 	staticButton.classList.add('btn-static');
 	staticButton.removeEventListener('mouseover', move);
 	staticButton.addEventListener('click', staticButtonClick);

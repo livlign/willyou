@@ -7,5 +7,6 @@ by editing this MSBuild file. In order to learn more about this please visit htt
   <PropertyGroup>
     <TimeStampOfAssociatedLegacyPublishXmlFile />
     <_PublishTargetUrl>E:\Work\Publish\willyou</_PublishTargetUrl>
+    <History>True|2021-06-22T17:15:04.8491930Z;</History>
   </PropertyGroup>
 </Project>
