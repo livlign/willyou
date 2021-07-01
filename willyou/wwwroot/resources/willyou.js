@@ -17,6 +17,25 @@ window.requestAnimFrame = (function () {
 		};
 })();
 
+const fonts = [
+	{
+		id: 0,
+		path: "../resources/fonts/PacificoSLO.json"
+	},
+	{
+		id: 1,
+		path: "../resources/fonts/Parisienne.json"
+	},
+	{
+		id: 2,
+		path: "../resources/fonts/SatisfySL.json"
+	},
+	{
+		id: 3,
+		path: "../resources/fonts/shadows-into-light.json"
+	},
+]
+var selectedFontId;
 var divMiddle, divBottom;
 var menu, menuContainer, isMenuShowing, menuSuggestion, toggleMovingButton;
 var content, contentRect;
@@ -40,17 +59,14 @@ docReady(function () {
 		btnRightText: document.getElementById('right-button-text').value,
 		endText: document.getElementById('end-text').value,
 		speed: parseInt(document.getElementById('speed-selection').value),
-		suggestionMenu: document.getElementById('toggle-menu-suggestion').checked
+		suggestionMenu: document.getElementById('toggle-menu-suggestion').checked,
+		fontId: document.getElementById('font-id').value
 	}
 	initMainData(defaultData);
 
 	drawText();
 });
 
-
-function showCor(event) {
-	console.log(event.clientX, event.clientY);
-}
 const model = {
 	movingButton: 'left' | 'right',
 	mainText: String,
@@ -61,6 +77,7 @@ const model = {
 }
 function initMainData(source) {
 	data = {
+		fontId: source.fontId,
 		fontSize: source.fontSize,
 		movingButton: source.movingButton,
 		mainText: source.mainText,
@@ -150,6 +167,7 @@ function btnSaveClick() {
 		{
 			method: "POST",
 			body: JSON.stringify({
+				'FontId': parseInt(document.getElementById('font-id').value),
 				'MainText': document.getElementById('main-text').value,
 				'EndText': document.getElementById('end-text').value,
 				'BtnLeftText': document.getElementById('left-button-text').value,
@@ -157,7 +175,7 @@ function btnSaveClick() {
 				'TextSize': parseInt(document.getElementById('font-size-selection').value),
 				'WritingSpeed': parseInt(document.getElementById('speed-selection').value),
 				'MovingButton': document.getElementById('toggle-moving-button').checked,
-				'MenuSuggestion': document.getElementById('toggle-menu-suggestion').checked,
+				'MenuSuggestion': document.getElementById('toggle-menu-suggestion').checked,				
 			}),
 			headers: {
 				'RequestVerificationToken': document.getElementsByName("__RequestVerificationToken")[0].value,
@@ -204,7 +222,9 @@ function refreshView() {
 	const leftText = document.getElementById('left-button-text').value;
 	const rightText = document.getElementById('right-button-text').value;
 	const suggestionMenu = document.getElementById('toggle-menu-suggestion').checked;
+	const fontId = document.getElementById('font-id').value;
 	var data = {
+		fontId: fontId,
 		movingButton: rdoMovingButtonValue,
 		fontSize: fontSize,
 		mainText: mainText,
@@ -227,7 +247,7 @@ function initVara() {
 	if (element && element[0]) {
 		element[0].remove();
 	}
-	vara = new Vara("#vara-container", "../resources/fonts/SatisfySL.json", [{
+	vara = new Vara("#vara-container", fonts[data.fontId].path, [{
 		autoAnimation: false,
 		text: data.mainText,
 		textAlign: "center",
@@ -253,7 +273,7 @@ function showVaraEnd() {
 	if (element && element[0]) {
 		element[0].remove();
 	}
-	vara = new Vara("#vara-container", "../resources/fonts/SatisfySL.json", [{
+	vara = new Vara("#vara-container", fonts[data.fontId].path, [{
 		autoAnimation: false,
 		text: data.endText,
 		textAlign: "center",
