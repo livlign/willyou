@@ -6,6 +6,8 @@ background: linear-gradient(300deg, rgba(131,58,180,1) 0%, rgba(253,29,29,1) 50%
 	width: 100%;
 	height: 100%;
     margin: 0;
+	font-family: Verdana, sans-serif;
+	font-size: 13px;
 }
 svg{
 	overflow: visible;
@@ -80,6 +82,20 @@ input[type='radio']:checked:after {
 	letter-spacing: 0.1em;
 	color: white;
 }
+.slider-label{
+	margin-right: 10px;
+	text-align: center;
+}
+.indicator-left{
+	font-size: 12px !important;
+	margin-top: 3px;
+	float:left;
+}
+.indicator-right{
+	font-size: 12px !important; 
+	margin-top: 3px;
+	float: right;
+}
 .contact-me {
 	position: absolute;
 	bottom: 5px;
@@ -119,7 +135,7 @@ input[type='radio']:checked:after {
 	letter-spacing: 0.1em;
 	color: white;
 	transition: all .5s ease;
-	margin-bottom: 15px;
+	margin-top: 15px;
 }
 .btn-refresh:hover{
 	cursor: pointer;
@@ -131,20 +147,20 @@ input[type='radio']:checked:after {
 .input-text{
 	margin-right: 10px;
 	margin-top: 5px;
-	border: 2px solid rgb(255, 255, 255);
-	border-radius: 5px;
-	height: 30px;
-	font-size: 16px;
-	padding: 2px;	
+	border: 1px solid rgb(255, 255, 255);
+	border-radius: 4px;
+	font-size: 14px;
 }
 .input-text:focus{
-	border: 1px solid rgb(0, 0, 0);
-	color: rgb(0, 4, 255);
+	color: rgb(221, 133, 18);
 }
 .menu-item{
 	display: flex;
 	flex-direction: column;
-	margin-bottom: 10px;	
+	margin-bottom: 7px;	
+}
+.menu-item label{
+	font-size: 16px;
 }
 .button-text{
 	display: flex;
@@ -168,7 +184,7 @@ input[type='radio']:checked:after {
 	appearance: none;
 	border-radius: 4px;
 	width: 95%; /* Full-width */
-	height: 25px; /* Specified height */
+	height: 20px; /* Specified height */
 	background: #ffffff; /* Grey background */
 	outline: none; /* Remove outline */
 	-webkit-transition: .2s; /* 0.2 seconds transition on hover */
@@ -177,7 +193,7 @@ input[type='radio']:checked:after {
   
   /* Mouse-over effects */
   .slider:hover {
-	background: #d6d6d6;
+	background: #ebf77b;
 	cursor: pointer;
   }
   
@@ -186,8 +202,8 @@ input[type='radio']:checked:after {
 	-webkit-appearance: none; /* Override default look */
 	appearance: none;
 	border-radius: 5px;;
-	width: 25px; /* Set a specific slider handle width */
-	height: 25px; /* Slider handle height */
+	width: 18px; /* Set a specific slider handle width */
+	height: 18px; /* Slider handle height */
 	background: #505050; /* Green background */
 	cursor: pointer; /* Cursor on hover */
   }
@@ -195,7 +211,7 @@ input[type='radio']:checked:after {
   .slider::-moz-range-thumb {
 	width: 25px; /* Set a specific slider handle width */
 	height: 25px; /* Slider handle height */
-	background: #04AA6D; /* Green background */
+	background: #505050; /* Green background */
 	cursor: pointer; /* Cursor on hover */
   }
 
@@ -230,7 +246,7 @@ input[type='radio']:checked:after {
 .toggle-menu {
     position: relative;
     float: right;
-	font-size: 24px;
+	font-size: 18px;
 	color:#fff;
 	font-weight: bold;
 	letter-spacing: .1em;
@@ -329,13 +345,12 @@ input[type='radio']:checked:after {
 .label-switch{
 	margin-right: 10px; 
 	margin-top: 2px;
-	min-width: 130px;
+	min-width: 150px;
 }
 .switch {
 	position: relative;
 	display: inline-block;
-	width: 105px;
-	height: 30px;
+	width: 100px;
   }
   
   .switch input {display:none;}
@@ -355,17 +370,17 @@ input[type='radio']:checked:after {
   .slider-switch:before {
 	position: absolute;
 	content: "";
-	height: 20px;
-	width: 20px;
-	left: 4px;
-	bottom: 5px;
+	height: 14px;
+	width: 14px;
+	left: 6px;
+	bottom: 3px;
 	background-color: white;
 	-webkit-transition: .4s;
 	transition: .4s;
   }
   
   input:checked + .slider-switch {
-	background-color: #505050;
+	background-color: #ff963b;
   }
   
   input:focus + .slider-switch {
@@ -389,10 +404,10 @@ input[type='radio']:checked:after {
 	color: white;
 	position: absolute;
 	transform: translate(-50%,-50%);
-	top: 45%;
+	top: 50%;
 	left: 50%;
-	font-size: 14px;
-	font-family: Verdana, sans-serif;
+	font-size: 12px;
+	
   }
   
   input:checked+ .slider-switch .on

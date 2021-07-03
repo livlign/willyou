@@ -81,15 +81,23 @@
                 </select>
             </div>
             <div class="menu-item">
-                <label>Text size</label>
+				<div class="slider-label">
+					<label class="indicator-left">Small</label>
+					<label class="indicator-right">Large</label>
+					<label class="slider-text">Text size</label>
+				</div>
                 <div class="slidecontainer">
                     <input type="range" min="50" max="120" value="@textSize" class="slider" id="font-size-selection" name="TextSize">
                 </div>
             </div>
             <div class="menu-item">
-                <label>Text writing speed</label>
+				<div class="slider-label">
+					<label class="indicator-left">Fast</label>
+					<label class="indicator-right">Slow</label>
+					<label class="slider-text">Text writing speed</label>
+				</div>
                 <div class="slidecontainer">
-                    <input type="range" min="1000" max="10000" value="@writingSpeed" class="slider" id="speed-selection" name="WritingSpeed">
+                    <input type="range" min="1000" max="15000" value="@writingSpeed" class="slider" id="speed-selection" name="WritingSpeed">
                 </div>
             </div>
             <div class="menu-item">
