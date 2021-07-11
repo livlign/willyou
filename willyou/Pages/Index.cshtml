@@ -10,17 +10,36 @@
     var endText = !string.IsNullOrEmpty(data?.EndText) ? data.EndText : "Too late!!!";
     var btnLeftText = !string.IsNullOrEmpty(data?.BtnLeftText) ? data.BtnLeftText : "Yes";
     var btnRightText = !string.IsNullOrEmpty(data?.BtnRightText) ? data.BtnRightText : "No";
-    var textSize = data?.TextSize != null ? data.TextSize : 100;
+    var textSize = data?.TextSize != null ? data.TextSize : 90;
     var writingSpeed = data?.WritingSpeed != null ? data.WritingSpeed : 5000;
     var movingButton = data?.MovingButton != null ? data.MovingButton : false;
     var menuSuggestion = data?.MenuSuggestion != null ? data.MenuSuggestion : true;
     var selectedFontId = data?.FontId != null ? data.FontId : 2;
+	var selectedTheme = data?.ThemeId != null ? data.ThemeId : 0;
 
     var fonts = new Dictionary<int, string>();
     fonts.Add(0, "PacificoSLO");
     fonts.Add(1, "Parisienne");
     fonts.Add(2, "SatisfySL");
     fonts.Add(3, "Shadows into light");
+
+	var themes = new Dictionary<int, string>();
+	themes.Add(0, "Sunlight");
+	themes.Add(1, "Blue Sky");
+	themes.Add(2, "Passion");
+	themes.Add(3, "Orange Juice");
+	themes.Add(4, "Malibu Beach");
+	themes.Add(5, "Fresh Green");
+	themes.Add(6, "Sunset");
+	themes.Add(7, "Nightsky");
+	themes.Add(8, "Warm Heart");
+	themes.Add(9, "Charming Dark");
+	themes.Add(10, "Lunar Eclipse");
+	themes.Add(11, "Slick Carbon");
+	themes.Add(12, "Aqua Splash");
+	themes.Add(13, "Desert Hump");
+	themes.Add(14, "Autumn Green");
+	themes.Add(15, "Midnight Bloom");
 }
 
 <link href="~/resources/willyou.css" rel="stylesheet" />
@@ -42,29 +61,35 @@
         gtag('config', 'G-BLFBGY97XP');
     </script>
 </head>
-<body>
+<body id="body-el">
     <div id="menu" class="menu">
         <div class="div-toggle-menu">
             <span id="toggle-menu" class="toggle-menu" onclick="toggleMenu()">>>></span> 
         </div>
         <div class="menuContainer" id="menu-container">
             @Html.AntiForgeryToken()
-            <div class="menu-item">
-                <label>Main text</label>
-                <input class="input-text" type="text" id="main-text" name="MainText" value="@mainText" />
-            </div>
-            <div class="menu-item">
-                <label>Ending text</label>
-                <input class="input-text" type="text" id="end-text" name="EndText" value="@endText" />
-            </div>
-            <div class="menu-item">
-                <label>Button text</label>
-                <div class="button-text">
-                    <input class="input-text button-text-input" type="text" id="left-button-text" name="btnLeftText" value="@btnLeftText" />
-                    <input class="input-text button-text-input" type="text" id="right-button-text" name="btnRightText" value="@btnRightText" />
-                </div>
-            </div>
-            <div class="menu-item">
+			<fieldset>
+				<legend>Content</legend>
+				<div class="menu-item">
+					<label>You have any question?</label>
+					<input class="input-text" type="text" id="main-text" name="MainText" value="@mainText" />
+				</div>
+				<div class="menu-item">
+					<label>And, what will you say after it?</label>
+					<input class="input-text" type="text" id="end-text" name="EndText" value="@endText" />
+				</div>
+				<div class="menu-item">
+					<label>Let's decide the two options</label>
+					<div class="button-text">
+						<input class="input-text button-text-input" type="text" id="left-button-text" name="btnLeftText" value="@btnLeftText" />
+						<input class="input-text button-text-input" type="text" id="right-button-text" name="btnRightText" value="@btnRightText" />
+					</div>
+				</div>
+			</fieldset>
+			
+           <fieldset>
+			   <legend>Text settings</legend>
+			   <div class="menu-item">
                 <label>Font</label>
                 <select class="input-text" id="font-id">
                     @foreach (var font in fonts)
@@ -79,70 +104,94 @@
                         }
                     }
                 </select>
-            </div>
-            <div class="menu-item">
-				<div class="slider-label">
-					<label class="indicator-left">Small</label>
-					<label class="indicator-right">Large</label>
-					<label class="slider-text">Text size</label>
+				<div class="menu-item">
+					<div class="slider-label">
+						<label class="indicator-left">Small</label>
+						<label class="indicator-right">Large</label>
+						<label class="slider-text">Size</label>
+					</div>
+					<div class="slidecontainer">
+						<input type="range" min="50" max="120" value="@textSize" class="slider" id="font-size-selection" name="TextSize">
+					</div>
 				</div>
-                <div class="slidecontainer">
-                    <input type="range" min="50" max="120" value="@textSize" class="slider" id="font-size-selection" name="TextSize">
-                </div>
-            </div>
-            <div class="menu-item">
-				<div class="slider-label">
-					<label class="indicator-left">Fast</label>
-					<label class="indicator-right">Slow</label>
-					<label class="slider-text">Text writing speed</label>
+				<div class="menu-item">
+					<div class="slider-label">
+						<label class="indicator-left">Fast</label>
+						<label class="indicator-right">Slow</label>
+						<label class="slider-text">Speed</label>
+					</div>
+					<div class="slidecontainer">
+						<input type="range" min="1000" max="15000" value="@writingSpeed" class="slider" id="speed-selection" name="WritingSpeed">
+					</div>
 				</div>
-                <div class="slidecontainer">
-                    <input type="range" min="1000" max="15000" value="@writingSpeed" class="slider" id="speed-selection" name="WritingSpeed">
-                </div>
             </div>
-            <div class="menu-item">
-                <div class="menu-suggestion-selection">
-                    <label class="label-switch">Moving button</label>
-                    <label class="switch">
-                        @if (movingButton)
-                        {
-                            <input type="checkbox" id="toggle-moving-button" checked name="MovingButton">
-                        }
-                        else
-                        {
-                            <input type="checkbox" id="toggle-moving-button" name="MovingButton">
-                        }
-                        <div class="slider-switch round">
-                            <!--ADDED HTML -->
-                            <span class="on">LEFT</span>
-                            <span class="off">RIGHT</span>
-                            <!--END-->
-                        </div>
-                    </label>
-                </div>
-            </div>
-            <div class="menu-item">
-                <div class="menu-suggestion-selection">
-                    <label class="label-switch">Menu suggestion</label>
-                    <label class="switch">
-                        @if (menuSuggestion)
-                        {
-                            <input type="checkbox" id="toggle-menu-suggestion" checked name="MenuSuggestion">
-                        }
-                        else
-                        {
-                            <input type="checkbox" id="toggle-menu-suggestion" name="MenuSuggestion">
-                        }
-
-                        <div class="slider-switch round">
-                            <!--ADDED HTML -->
-                            <span class="on">ON</span>
-                            <span class="off">OFF</span>
-                            <!--END-->
-                        </div>
-                    </label>
-                </div>
-            </div>
+		   </fieldset>
+            
+            <fieldset>
+				<legend>Advance settings</legend>
+				<div class="menu-item">
+					<div class="menu-suggestion-selection">
+						<label class="label-switch">Moving button</label>
+						<label class="switch">
+							@if (movingButton)
+							{
+								<input type="checkbox" id="toggle-moving-button" checked name="MovingButton">
+							}
+							else
+							{
+								<input type="checkbox" id="toggle-moving-button" name="MovingButton">
+							}
+							<div class="slider-switch round">
+								<!--ADDED HTML -->
+								<span class="on">LEFT</span>
+								<span class="off">RIGHT</span>
+								<!--END-->
+							</div>
+						</label>
+					</div>
+				</div>
+				<div class="menu-item">
+					<div class="menu-suggestion-selection">
+						<label class="label-switch">Menu suggestion</label>
+						<label class="switch">
+							@if (menuSuggestion)
+							{
+								<input type="checkbox" id="toggle-menu-suggestion" checked name="MenuSuggestion">
+							}
+							else
+							{
+								<input type="checkbox" id="toggle-menu-suggestion" name="MenuSuggestion">
+							}
+	
+							<div class="slider-switch round">
+								<!--ADDED HTML -->
+								<span class="on">ON</span>
+								<span class="off">OFF</span>
+								<!--END-->
+							</div>
+						</label>
+					</div>
+				</div>
+				<div class="menu-item">
+					<div class="menu-suggestion-selection">
+						<label class="label-switch">Theme color</label>
+						<select class="input-text" style="min-width: 48%;" id="theme-id" onchange="setTheme(this.value)">
+							@foreach (var theme in themes)
+							{
+								if (theme.Key == selectedTheme)
+								{
+									<option value="@theme.Key" selected>@theme.Value</option>
+								}
+								else
+								{
+									<option value="@theme.Key">@theme.Value</option>
+								}
+							}
+						</select>
+					</div>
+				</div>
+			</fieldset>
+            
             <button class="btn-refresh" id="btnPlay">Apply</button>
             <button class="btn-refresh" id="btnSave">Save & Share</button>
             <div class="save-result-container" id="save-result-container">

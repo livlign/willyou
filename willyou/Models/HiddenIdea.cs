@@ -7,6 +7,7 @@ namespace willyou.Models
 {
     public class HiddenIdea
     {
+        public int ThemeId { get; set; }
         public int FontId { get; set; }
         public string MainText { get; set; }
         public string EndText { get; set; }

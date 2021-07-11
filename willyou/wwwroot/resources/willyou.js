@@ -35,6 +35,73 @@ const fonts = [
 		path: "../resources/fonts/shadows-into-light.json"
 	},
 ]
+const themes = [
+	{
+		id: 0,
+		backgroundValue: "linear-gradient(to right, #f83600 0%, #f9d423 100%)",
+	},
+	{
+		id: 1,
+		backgroundValue: "linear-gradient(to top, #30cfd0 0%, #330867 100%)",
+	},
+	{
+		id: 2,
+		backgroundValue: "linear-gradient(to right, #ff8177 0%, #ff867a 0%, #ff8c7f 21%, #f99185 52%, #cf556c 78%, #b12a5b 100%)",
+	},
+	{
+		id: 3,
+		backgroundValue: "linear-gradient(-20deg, #fc6076 0%, #ff9a44 100%)"
+	},
+	{
+		id: 4,
+		backgroundValue: "linear-gradient(to right, #4facfe 0%, #00f2fe 100%)"
+	},
+	{
+		id: 5,
+		backgroundValue: "linear-gradient(to top, #0ba360 0%, #3cba92 100%)",
+	},
+	{
+		id: 6,
+		backgroundValue: "linear-gradient(to top, #f43b47 0%, #453a94 100%)",
+	},
+	{
+		id: 7,
+		backgroundValue: "linear-gradient(to top, #09203f 0%, #537895 100%)",
+	},
+	{
+		id: 8,
+		backgroundValue: "linear-gradient(to top, #c71d6f 0%, #d09693 100%)"
+	},
+	{
+		id: 9,
+		backgroundValue: "linear-gradient(60deg, #29323c 0%, #485563 100%)"
+	},
+	{
+		id: 10,
+		backgroundValue: "linear-gradient(-225deg, #FF3CAC 0%, #562B7C 52%, #2B86C5 100%)"
+	},
+	{
+		id: 11,
+		backgroundValue: "linear-gradient(to bottom, #323232 0%, #3F3F3F 40%, #1C1C1C 150%), linear-gradient(to top, rgba(255,255,255,0.40) 0%, rgba(0,0,0,0.25) 200%)"
+	},
+	{
+		id: 12,
+		backgroundValue: "linear-gradient(15deg, #13547a 0%, #80d0c7 100%)"
+	},
+	{
+		id: 13,
+		backgroundValue: "linear-gradient(to top, #c79081 0%, #dfa579 100%)"
+	},
+	{
+		id: 14,
+		backgroundValue: "linear-gradient(-60deg, #16a085 0%, #f4d03f 100%)"
+	},
+	{
+		id: 15,
+		backgroundValue: "linear-gradient(-20deg, #2b5876 0%, #4e4376 100%)"
+	}
+]
+
 var selectedFontId;
 var divMiddle, divBottom;
 var menu, menuContainer, isMenuShowing, menuSuggestion, toggleMovingButton;
@@ -60,7 +127,8 @@ docReady(function () {
 		endText: document.getElementById('end-text').value,
 		speed: parseInt(document.getElementById('speed-selection').value),
 		suggestionMenu: document.getElementById('toggle-menu-suggestion').checked,
-		fontId: document.getElementById('font-id').value
+		fontId: document.getElementById('font-id').value,
+		themeId: document.getElementById('theme-id').value
 	}
 	initMainData(defaultData);
 
@@ -85,7 +153,8 @@ function initMainData(source) {
 		btnRightText: source.btnRightText,
 		endText: source.endText,
 		speed: source.speed,
-		suggestionMenu: source.suggestionMenu
+		suggestionMenu: source.suggestionMenu,
+		themeId: source.themeId
 	}
 
 	btnLeft.textContent = data.btnLeftText;
@@ -104,6 +173,8 @@ function initMainData(source) {
 	staticButton.addEventListener('click', staticButtonClick);
 	staticButton.removeEventListener('mouseover', move);
 	staticButton.classList.add('btn-static');
+
+	setTheme(data.themeId);
 }
 function initElements() {
 	isMenuShowing = false;
@@ -139,6 +210,11 @@ function initElements() {
 	btnOpenResult.addEventListener('click', openResult);
 	btnCopyResult.addEventListener('click', copyResult);
 }
+function setTheme(themeId) {
+	const selectedTheme = themes[themeId];
+	const bodyEl = document.getElementById('body-el');
+	bodyEl.style.cssText = `background: ${selectedTheme.backgroundValue}; transition: all 1s ease;display: flex;flex - direction: row;	width: 100 %;	height: 100 %;	margin: 0;	font - family: Verdana, sans - serif;	font - size: 10px;`
+}
 function openResult() {
 	var result = txtSaveResult.value;
 	if (!result || result === '') return;
@@ -167,6 +243,7 @@ function btnSaveClick() {
 		{
 			method: "POST",
 			body: JSON.stringify({
+				'ThemeId': parseInt(document.getElementById('theme-id').value),
 				'FontId': parseInt(document.getElementById('font-id').value),
 				'MainText': document.getElementById('main-text').value,
 				'EndText': document.getElementById('end-text').value,
@@ -175,7 +252,7 @@ function btnSaveClick() {
 				'TextSize': parseInt(document.getElementById('font-size-selection').value),
 				'WritingSpeed': parseInt(document.getElementById('speed-selection').value),
 				'MovingButton': document.getElementById('toggle-moving-button').checked,
-				'MenuSuggestion': document.getElementById('toggle-menu-suggestion').checked,				
+				'MenuSuggestion': document.getElementById('toggle-menu-suggestion').checked,
 			}),
 			headers: {
 				'RequestVerificationToken': document.getElementsByName("__RequestVerificationToken")[0].value,
@@ -310,6 +387,7 @@ function toggleMenu() {
 		toggle.style.animation = "blink 3s linear infinite";
 		setTimeout(() => {
 			toggle.textContent = '>>>';
+			toggle.style.color = 'white';
 		}, 600);
 	}
 	else {
@@ -321,6 +399,7 @@ function toggleMenu() {
 		setTimeout(() => {
 			toggle.textContent = '<<<';
 			toggle.style.animation = "";
+			toggle.style.color = "#4a4a4a";
 		}, 600);
 	}
 	isMenuShowing = !isMenuShowing;
