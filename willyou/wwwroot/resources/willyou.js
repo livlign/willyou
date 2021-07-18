@@ -300,6 +300,7 @@ function refreshView() {
 	const rightText = document.getElementById('right-button-text').value;
 	const suggestionMenu = document.getElementById('toggle-menu-suggestion').checked;
 	const fontId = document.getElementById('font-id').value;
+	const themeId = document.getElementById('theme-id').value;
 	var data = {
 		fontId: fontId,
 		movingButton: rdoMovingButtonValue,
@@ -309,7 +310,8 @@ function refreshView() {
 		btnRightText: rightText,
 		endText: endText,
 		speed: speed,
-		suggestionMenu: suggestionMenu
+		suggestionMenu: suggestionMenu,
+		themeId: themeId
 	}
 	initMainData(data);
 
@@ -331,7 +333,7 @@ function initVara() {
 		fontSize: data.fontSize,
 		strokeWidth: 1,
 		color: "#fff",
-		duration: data.speed,
+		duration: 15000 - data.speed,
 	}]);
 
 	vara.animationEnd(function (i, o) {

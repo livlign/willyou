@@ -11,7 +11,7 @@
     var btnLeftText = !string.IsNullOrEmpty(data?.BtnLeftText) ? data.BtnLeftText : "Yes";
     var btnRightText = !string.IsNullOrEmpty(data?.BtnRightText) ? data.BtnRightText : "No";
     var textSize = data?.TextSize != null ? data.TextSize : 90;
-    var writingSpeed = data?.WritingSpeed != null ? data.WritingSpeed : 5000;
+    var writingSpeed = data?.WritingSpeed != null ? data.WritingSpeed : 10000;
     var movingButton = data?.MovingButton != null ? data.MovingButton : false;
     var menuSuggestion = data?.MenuSuggestion != null ? data.MenuSuggestion : true;
     var selectedFontId = data?.FontId != null ? data.FontId : 2;
@@ -116,8 +116,8 @@
 				</div>
 				<div class="menu-item">
 					<div class="slider-label">
-						<label class="indicator-left">Fast</label>
-						<label class="indicator-right">Slow</label>
+						<label class="indicator-left">Slow</label>
+						<label class="indicator-right">Fast</label>
 						<label class="slider-text">Speed</label>
 					</div>
 					<div class="slidecontainer">
