@@ -343,6 +343,11 @@ function initVara() {
 			buttonContainer.style.opacity = 1;
 			buttonContainer.style.transition = 'all 1s ease-in-out';
 		}, 200);
+		setTimeout(() => {
+			if (data.suggestionMenu) {
+				menuSuggestion.style.opacity = 100;
+			}
+		}, 1000);
 	});
 }
 function showVaraEnd() {
@@ -361,13 +366,6 @@ function showVaraEnd() {
 		color: "#fff",
 		duration: data.speed,
 	}]);
-	vara.animationEnd(function (i, o) {
-		setTimeout(() => {
-			if (data.suggestionMenu) {
-				menuSuggestion.style.opacity = 100;
-			}
-		}, 1000);
-	});
 	setTimeout(() => {
 		vara.playAll();
 	}, 100);

@@ -10,7 +10,7 @@
     var endText = !string.IsNullOrEmpty(data?.EndText) ? data.EndText : "Too late!!!";
     var btnLeftText = !string.IsNullOrEmpty(data?.BtnLeftText) ? data.BtnLeftText : "Yes";
     var btnRightText = !string.IsNullOrEmpty(data?.BtnRightText) ? data.BtnRightText : "No";
-    var textSize = data?.TextSize != null ? data.TextSize : 90;
+    var textSize = data?.TextSize != null ? data.TextSize : 70;
     var writingSpeed = data?.WritingSpeed != null ? data.WritingSpeed : 10000;
     var movingButton = data?.MovingButton != null ? data.MovingButton : false;
     var menuSuggestion = data?.MenuSuggestion != null ? data.MenuSuggestion : true;
@@ -175,7 +175,7 @@
 				<div class="menu-item">
 					<div class="menu-suggestion-selection">
 						<label class="label-switch">Theme color</label>
-						<select class="input-text" style="min-width: 48%;" id="theme-id" onchange="setTheme(this.value)">
+						<select class="input-text" id="theme-id" style="max-width: 38%" onchange="setTheme(this.value)">
 							@foreach (var theme in themes)
 							{
 								if (theme.Key == selectedTheme)
